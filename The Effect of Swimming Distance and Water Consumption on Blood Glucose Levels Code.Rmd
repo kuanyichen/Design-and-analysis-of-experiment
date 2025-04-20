@@ -1,5 +1,5 @@
 ---
-title: "Stats 101B Project"
+title: "The Effect of Swimming Distance and Water Consumption on Blood Glucose Levels"
 author: "Kuan-Yi Chen"
 date: "2024-05-18"
 output: pdf_document
