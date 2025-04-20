@@ -1,0 +1,65 @@
+---
+title: "Stats 101B Project"
+author: "Kuan-Yi Chen"
+date: "2024-05-18"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Sample household numbers:
+
+```{r}
+set.seed(1)
+round(runif(32, min = 1, max = 595))
+```
+
+Data Analysis
+
+```{r}
+data1 <- read.csv("swim_water_data.csv")
+blood_glucose_change <- data1$Difference
+swim <- data1$Swim.Level
+water <- data1$Water.Consumption.Level
+block <- data1$Age.Blocks
+```
+
+ANOVA Table
+
+```{r}
+model1 <- aov(blood_glucose_change ~ factor(swim)*factor(water)+factor(block))
+summary(model1)
+```
+
+Residuals Analysis
+
+```{r}
+par(mfrow = c(1, 2))
+res1 <- model1$residuals
+qqnorm(res1);qqline(res1)
+plot(model1$fitted.values, res1)
+abline(h = 0, col = "red")
+```
+
+Interaction Plot
+
+```{r}
+library(phia)
+plot(interactionMeans(model1))
+```
+
+Power Analysis
+
+```{r}
+# ANOVA table without blocking (treating as four treatment groups)
+model2 <- aov(blood_glucose_change ~ factor(swim)*factor(water))
+summary(model2)
+```
+
+```{r}
+library(pwr)
+f <- sqrt((1.75^2 + 2^2 + 1.375^2 + 2^2) / (4 * 4.683))
+pwr.anova.test(k = 4, n = NULL, f = f, sig.level = 0.05, power = 0.9)
+```
